@@ -16,7 +16,15 @@ describe('material', () => {
     tree.create('package.json', JSON.stringify({}));
     const runner = new SchematicTestRunner('schematics', collectionPath);
     runner.runSchematicAsync('material', {}, tree).toPromise().then((resultTree) => {
-      expect(resultTree.files).toEqual(['/package.json']);
+      const expectedFiles = [
+        '/package.json',
+        '/src/app/app.module.ts',
+        '/src/app/material/material.module.ts',
+        '/src/app/shared/models/base-model.ts',
+        '/src/app/shared/shared.module.ts'
+      ];
+
+      expect(resultTree.files.sort()).toEqual(expectedFiles.sort());
       expect(resultTree.readContent('/package.json')).toContain(`"@angular/material"`);
     });
   });

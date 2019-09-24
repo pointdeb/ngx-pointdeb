@@ -1,4 +1,15 @@
-import { Rule, SchematicContext, Tree, chain } from '@angular-devkit/schematics';
+import {
+  Rule,
+  SchematicContext,
+  Tree,
+  chain,
+  mergeWith,
+  apply,
+  url,
+  template,
+  forEach,
+  FileEntry
+} from '@angular-devkit/schematics';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 import {PackageJsonDependencyTypes, PackageJsonDependency, addPackageJsonDependency } from '../../utils';
 
@@ -23,11 +34,29 @@ const installPackageJsonDependencies = (): Rule => {
   };
 };
 
+const applyTemplateFiles = (options: any): Rule => {
+  return (_host: Tree, _context: SchematicContext) => {
+    const rule = mergeWith(
+      apply(url('./files'), [
+        template({...options}),
+        forEach((fileEntry: FileEntry) => {
+          if (_host.exists(fileEntry.path)) {
+            return null;
+          }
+          return fileEntry;
+        })
+      ])
+    );
+    return rule(_host, _context);
+  };
+};
+
 // You don't have to export the function as default. You can also have more than one rule factory
 // per file.
 export function material(_options: any): Rule {
   return chain([
     addPackageJsonDendencies(),
-    installPackageJsonDependencies()
+    installPackageJsonDependencies(),
+    applyTemplateFiles(_options)
   ]);
 }
