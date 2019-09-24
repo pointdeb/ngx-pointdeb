@@ -5,10 +5,10 @@ import {PackageJsonDependencyTypes, PackageJsonDependency, addPackageJsonDepende
 const addPackageJsonDendencies =  (): Rule => {
   return (host: Tree, context: SchematicContext) => {
     const dependencies: PackageJsonDependency[] = [
-      { type: PackageJsonDependencyTypes.DEFAULT, version: 'latest', name: '@angular/material' },
-      { type: PackageJsonDependencyTypes.DEFAULT, version: 'latest', name: '@angular/cdk' },
-      { type: PackageJsonDependencyTypes.DEFAULT, version: 'latest', name: 'hammerjs' },
-      { type: PackageJsonDependencyTypes.DEFAULT, version: 'latest', name: 'material-design-icons' },
+      { type: PackageJsonDependencyTypes.DEFAULT, version: '~8.2.0', name: '@angular/material' },
+      { type: PackageJsonDependencyTypes.DEFAULT, version: '~8.2.0', name: '@angular/cdk' },
+      { type: PackageJsonDependencyTypes.DEFAULT, version: '~2.0.8', name: 'hammerjs' },
+      { type: PackageJsonDependencyTypes.DEFAULT, version: '~3.0.1', name: 'material-design-icons' },
     ];
 
     dependencies.forEach(dependency => addPackageJsonDependency(host, context, dependency));
