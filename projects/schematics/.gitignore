@@ -3,6 +3,10 @@ src/**/*.js
 src/**/*.js.map
 src/**/*.d.ts
 
+utils/**/*.js
+utils/**/*.js.map
+utils/**/*.d.ts
+
 # IDEs
 .idea/
 jsconfig.json
