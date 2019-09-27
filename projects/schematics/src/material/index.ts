@@ -8,10 +8,17 @@ import {
   url,
   template,
   forEach,
-  FileEntry
+  FileEntry,
+  SchematicsException
 } from '@angular-devkit/schematics';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 import {PackageJsonDependencyTypes, PackageJsonDependency, addPackageJsonDependency } from '../../utils';
+import { Schema } from './schema';
+import { findModuleFromOptions, addModuleImportToModule, getProjectFromWorkspace, getProjectStyleFile } from '@angular/cdk/schematics';
+import {getWorkspace} from '@schematics/angular/utility/config';
+import {InsertChange} from '@schematics/angular/utility/change';
+import { stylesContent } from './theming/theming';
+
 
 const addPackageJsonDendencies =  (): Rule => {
   return (host: Tree, context: SchematicContext) => {
@@ -34,7 +41,7 @@ const installPackageJsonDependencies = (): Rule => {
   };
 };
 
-const applyTemplateFiles = (options: any): Rule => {
+const applyTemplateFiles = (options: Schema): Rule => {
   return (_host: Tree, _context: SchematicContext) => {
     const rule = mergeWith(
       apply(url('./files'), [
@@ -51,12 +58,36 @@ const applyTemplateFiles = (options: any): Rule => {
   };
 };
 
-// You don't have to export the function as default. You can also have more than one rule factory
-// per file.
-export function material(_options: any): Rule {
+const addSharedModulesToModule = (_options: Schema): Rule => {
+  return (_host: Tree, _context: SchematicContext) => {
+    const modulePath = findModuleFromOptions(_host, {name: _options.project})!;
+    addModuleImportToModule(_host, modulePath, 'SharedModule', './shared/shared.module');
+    return _host;
+  };
+};
+
+const insertStyles = (_options: Schema): Rule => {
+  return (_host: Tree, _context: SchematicContext) => {
+    const workspace = getWorkspace(_host);
+    const project = getProjectFromWorkspace(workspace, _options.project);
+    const stylesPath = getProjectStyleFile(project, 'scss')!;
+    if (!stylesPath) {
+      throw new SchematicsException(`Could not find the style file!`);
+    }
+    const insertion = new InsertChange(stylesPath, 0, stylesContent(_options.project));
+    const recorder = _host.beginUpdate(stylesPath);
+    recorder.insertLeft(insertion.pos, insertion.toAdd);
+    _host.commitUpdate(recorder);
+    return _host;
+  };
+};
+
+export function material(_options: Schema): Rule {
   return chain([
     addPackageJsonDendencies(),
     installPackageJsonDependencies(),
-    applyTemplateFiles(_options)
+    applyTemplateFiles(_options),
+    addSharedModulesToModule(_options),
+    insertStyles(_options),
   ]);
 }
