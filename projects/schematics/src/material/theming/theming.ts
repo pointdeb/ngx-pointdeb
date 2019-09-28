@@ -1,9 +1,9 @@
-export const stylesContent = (_name: string = 'app') => {
+export const createStylesContent = (_name: string = 'app') => {
 return `
 /* You can add global styles to this file, and also import other style files */
 @import 'material-design-icons/iconfont/material-icons.css';
-
 @import '~@angular/material/theming';
+
 @include mat-core();
 
 $${_name}-primary: mat-palette($mat-deep-purple);

@@ -21,7 +21,7 @@ import { PackageJsonDependencyTypes, PackageJsonDependency, addPackageJsonDepend
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 import { getWorkspace } from '@schematics/angular/utility/config';
 import { InsertChange } from '@schematics/angular/utility/change';
-import { stylesContent } from './theming/theming';
+import { createStylesContent } from './theming/theming';
 import { Schema } from './schema';
 
 const addPackageJsonDendencies = (): Rule => {
@@ -78,7 +78,13 @@ const insertStyles = (_options: Schema): Rule => {
     if (!stylesPath) {
       throw new SchematicsException(`Could not find the style file!`);
     }
-    const insertion = new InsertChange(stylesPath, 0, stylesContent(_options.project));
+    const stylesContent = createStylesContent(_options.project);
+    if (_host.read(stylesPath)!.toString().includes(stylesContent)) {
+      _context.logger.info('Styles already made, so skipping...');
+      return _host;
+    }
+
+    const insertion = new InsertChange(stylesPath, 0, stylesContent);
     const recorder = _host.beginUpdate(stylesPath);
     recorder.insertLeft(insertion.pos, insertion.toAdd);
     _host.commitUpdate(recorder);

@@ -23,7 +23,7 @@ describe('material', () => {
           '/src/app/material/material.module.ts',
           '/src/app/shared/models/base-model.ts',
           '/src/app/shared/shared.module.ts',
-          '/src/style.scss'
+          '/src/styles.scss'
         ];
         expectedFiles = expectedFiles.sort().map(item => {
           expect(resultTree.files.includes(appOptions.name + item));
