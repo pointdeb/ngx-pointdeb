@@ -1,7 +1,7 @@
 export const createStylesContent = (_name: string = 'app') => {
 return `
 /* You can add global styles to this file, and also import other style files */
-@import 'material-design-icons/iconfont/material-icons.css';
+@import '~material-design-icons/iconfont/material-icons.css';
 @import '~@angular/material/theming';
 
 @include mat-core();
@@ -26,6 +26,10 @@ body {
   flex-direction: column;
 }
 
+.mat-drawer-container {
+  height: 100%;
+}
+
 .loader {
   display: flex;
   height: 100%;
@@ -45,3 +49,7 @@ body {
 }
 `;
 };
+
+export const getLoaderComponent = () => {
+  return `<div class="loader">Loading...</div>`;
+}

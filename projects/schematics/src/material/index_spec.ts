@@ -35,6 +35,8 @@ describe('material', () => {
         );
         expect(resultTree.readContent(appOptions.name + '/src/app/app.module.ts')).toContain(`SharedModule`);
         expect(resultTree.readContent(appOptions.name + '/src/styles.scss')).toContain(`@import '~@angular/material/theming'`);
+        expect(resultTree.readContent(appOptions.name + '/src/index.html')).toContain(`Loading...`);
+        expect(resultTree.readContent(appOptions.name + '/src/main.ts')).toContain(`import 'hammerjs';`);
       });
   });
 });

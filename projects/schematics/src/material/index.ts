@@ -15,13 +15,15 @@ import {
   findModuleFromOptions,
   addModuleImportToModule,
   getProjectFromWorkspace,
-  getProjectStyleFile
+  getProjectStyleFile,
+  getProjectTargetOptions,
+  getProjectMainFile
 } from '@angular/cdk/schematics';
 import { PackageJsonDependencyTypes, PackageJsonDependency, addPackageJsonDependency } from '../../utils';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 import { getWorkspace } from '@schematics/angular/utility/config';
 import { InsertChange } from '@schematics/angular/utility/change';
-import { createStylesContent } from './theming/theming';
+import { createStylesContent, getLoaderComponent } from './theming/theming';
 import { Schema } from './schema';
 
 const addPackageJsonDendencies = (): Rule => {
@@ -64,8 +66,28 @@ const applyTemplateFiles = (options: Schema): Rule => {
 
 const addSharedModulesToModule = (_options: Schema): Rule => {
   return (_host: Tree, _context: SchematicContext) => {
+    const workspace = getWorkspace(_host);
+    const project = getProjectFromWorkspace(workspace, _options.project);
+    const buildOptions = getProjectTargetOptions(project, 'build');
     const modulePath = findModuleFromOptions(_host, { name: _options.project })!;
+
+    addModuleImportToModule(_host, modulePath, 'BrowserAnimationsModule', '@angular/platform-browser/animations');
     addModuleImportToModule(_host, modulePath, 'SharedModule', './shared/shared.module');
+    // add loading to index.html
+    if (!buildOptions.index) {
+      throw new SchematicsException('No project "index.html" file could be found.');
+    }
+    const mainAppTag = `${project.prefix}-root`;
+    const indexHtmlContent = _host.read(buildOptions.index)!.toString()
+      .replace(`<${mainAppTag}></${mainAppTag}>`, `<${mainAppTag}>${getLoaderComponent()}</${mainAppTag}>`);
+    _host.overwrite(buildOptions.index, indexHtmlContent);
+
+    // add hammerjs to main.ts
+    const mainTsFile = getProjectMainFile(project);
+    const mainTsContent = _host.read(mainTsFile)!.toString();
+    if (!mainTsContent.match(`import 'hammerjs';`)) {
+      _host.overwrite(mainTsFile, `import 'hammerjs';\n` + mainTsContent);
+    }
     return _host;
   };
 };
