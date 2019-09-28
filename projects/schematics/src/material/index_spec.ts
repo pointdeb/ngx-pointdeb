@@ -1,7 +1,4 @@
-import {
-  SchematicTestRunner,
-  UnitTestTree
-} from '@angular-devkit/schematics/testing';
+import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
 
 const collectionPath = path.join(__dirname, '../collection.json');
@@ -12,21 +9,8 @@ const workspaceOptions = { name: 'workspace', version: 'latest' };
 
 describe('material', () => {
   beforeEach(async () => {
-    appTree = await runner
-      .runExternalSchematicAsync(
-        '@schematics/angular',
-        'workspace',
-        workspaceOptions
-      )
-      .toPromise();
-    appTree = await runner
-      .runExternalSchematicAsync(
-        '@schematics/angular',
-        'application',
-        appOptions,
-        appTree
-      )
-      .toPromise();
+    appTree = await runner.runExternalSchematicAsync('@schematics/angular', 'workspace', workspaceOptions).toPromise();
+    appTree = await runner.runExternalSchematicAsync('@schematics/angular', 'application', appOptions, appTree).toPromise();
   });
   it('init material', () => {
     runner
@@ -45,14 +29,12 @@ describe('material', () => {
           expect(resultTree.files.includes(appOptions.name + item));
           return item;
         });
-        expect(resultTree.readContent('/package.json'))
-        .toContain(`"@angular/material"`);
-        expect(resultTree.readContent(appOptions.name + '/src/app/app.module.ts'))
-        .toContain(`import { SharedModule } from './shared/shared.module';`);
-        expect(resultTree.readContent(appOptions.name + '/src/app/app.module.ts'))
-        .toContain(`SharedModule`);
-        expect(resultTree.readContent(appOptions.name + '/src/styles.scss'))
-        .toContain(`@import '~@angular/material/theming'`);
+        expect(resultTree.readContent('/package.json')).toContain(`"@angular/material"`);
+        expect(resultTree.readContent(appOptions.name + '/src/app/app.module.ts')).toContain(
+          `import { SharedModule } from './shared/shared.module';`
+        );
+        expect(resultTree.readContent(appOptions.name + '/src/app/app.module.ts')).toContain(`SharedModule`);
+        expect(resultTree.readContent(appOptions.name + '/src/styles.scss')).toContain(`@import '~@angular/material/theming'`);
       });
   });
 });

@@ -11,26 +11,30 @@ import {
   FileEntry,
   SchematicsException
 } from '@angular-devkit/schematics';
+import {
+  findModuleFromOptions,
+  addModuleImportToModule,
+  getProjectFromWorkspace,
+  getProjectStyleFile
+} from '@angular/cdk/schematics';
+import { PackageJsonDependencyTypes, PackageJsonDependency, addPackageJsonDependency } from '../../utils';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
-import {PackageJsonDependencyTypes, PackageJsonDependency, addPackageJsonDependency } from '../../utils';
-import { Schema } from './schema';
-import { findModuleFromOptions, addModuleImportToModule, getProjectFromWorkspace, getProjectStyleFile } from '@angular/cdk/schematics';
-import {getWorkspace} from '@schematics/angular/utility/config';
-import {InsertChange} from '@schematics/angular/utility/change';
+import { getWorkspace } from '@schematics/angular/utility/config';
+import { InsertChange } from '@schematics/angular/utility/change';
 import { stylesContent } from './theming/theming';
+import { Schema } from './schema';
 
-
-const addPackageJsonDendencies =  (): Rule => {
-  return (host: Tree, context: SchematicContext) => {
+const addPackageJsonDendencies = (): Rule => {
+  return (_host: Tree, _context: SchematicContext) => {
     const dependencies: PackageJsonDependency[] = [
       { type: PackageJsonDependencyTypes.DEFAULT, version: '~8.2.0', name: '@angular/material' },
       { type: PackageJsonDependencyTypes.DEFAULT, version: '~8.2.0', name: '@angular/cdk' },
       { type: PackageJsonDependencyTypes.DEFAULT, version: '~2.0.8', name: 'hammerjs' },
-      { type: PackageJsonDependencyTypes.DEFAULT, version: '~3.0.1', name: 'material-design-icons' },
+      { type: PackageJsonDependencyTypes.DEFAULT, version: '~3.0.1', name: 'material-design-icons' }
     ];
 
-    dependencies.forEach(dependency => addPackageJsonDependency(host, context, dependency));
-    return host;
+    dependencies.forEach(dependency => addPackageJsonDependency(_host, _context, dependency));
+    return _host;
   };
 };
 
@@ -45,7 +49,7 @@ const applyTemplateFiles = (options: Schema): Rule => {
   return (_host: Tree, _context: SchematicContext) => {
     const rule = mergeWith(
       apply(url('./files'), [
-        template({...options}),
+        template({ ...options }),
         forEach((fileEntry: FileEntry) => {
           if (_host.exists(fileEntry.path)) {
             return null;
@@ -60,7 +64,7 @@ const applyTemplateFiles = (options: Schema): Rule => {
 
 const addSharedModulesToModule = (_options: Schema): Rule => {
   return (_host: Tree, _context: SchematicContext) => {
-    const modulePath = findModuleFromOptions(_host, {name: _options.project})!;
+    const modulePath = findModuleFromOptions(_host, { name: _options.project })!;
     addModuleImportToModule(_host, modulePath, 'SharedModule', './shared/shared.module');
     return _host;
   };
@@ -88,6 +92,6 @@ export function material(_options: Schema): Rule {
     installPackageJsonDependencies(),
     applyTemplateFiles(_options),
     addSharedModulesToModule(_options),
-    insertStyles(_options),
+    insertStyles(_options)
   ]);
 }

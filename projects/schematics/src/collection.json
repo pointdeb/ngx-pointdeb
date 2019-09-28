@@ -3,7 +3,8 @@
   "schematics": {
     "material": {
       "description": "Init Material project schematic.",
-      "factory": "./material/index#material"
+      "factory": "./material/index#material",
+      "schema": "./material/schema.json"
     }
   }
 }
