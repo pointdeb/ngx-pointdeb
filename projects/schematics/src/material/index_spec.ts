@@ -23,7 +23,9 @@ describe('material', () => {
           '/src/app/material/material.module.ts',
           '/src/app/shared/models/base-model.ts',
           '/src/app/shared/shared.module.ts',
-          '/src/styles.scss'
+          '/src/app/shared/pages/not-found/not-found.component.ts',
+          '/src/styles.scss',
+          '/src/app/app-routing.module.ts',
         ];
         expectedFiles = expectedFiles.sort().map(item => {
           expect(resultTree.files.includes(appOptions.name + item));
@@ -34,6 +36,8 @@ describe('material', () => {
           `import { SharedModule } from './shared/shared.module';`
         );
         expect(resultTree.readContent(appOptions.name + '/src/app/app.module.ts')).toContain(`SharedModule`);
+        expect(resultTree.readContent(appOptions.name + '/src/app/app.module.ts')).toContain(`AppRoutingModule`);
+        expect(resultTree.readContent(appOptions.name + '/src/app/app.component.html')).toContain(`router-outlet`);
         expect(resultTree.readContent(appOptions.name + '/src/styles.scss')).toContain(`@import '~@angular/material/theming'`);
         expect(resultTree.readContent(appOptions.name + '/src/index.html')).toContain(`Loading...`);
         expect(resultTree.readContent(appOptions.name + '/src/main.ts')).toContain(`import 'hammerjs';`);

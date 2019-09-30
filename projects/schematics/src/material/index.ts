@@ -23,7 +23,7 @@ import { PackageJsonDependencyTypes, PackageJsonDependency, addPackageJsonDepend
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 import { getWorkspace } from '@schematics/angular/utility/config';
 import { InsertChange } from '@schematics/angular/utility/change';
-import { createStylesContent, getLoaderComponent } from './theming/theming';
+import { createStylesContent, getLoaderComponent, getAppComponentContent } from './theming/theming';
 import { Schema } from './schema';
 
 const addPackageJsonDendencies = (): Rule => {
@@ -73,6 +73,7 @@ const addSharedModulesToModule = (_options: Schema): Rule => {
 
     addModuleImportToModule(_host, modulePath, 'BrowserAnimationsModule', '@angular/platform-browser/animations');
     addModuleImportToModule(_host, modulePath, 'SharedModule', './shared/shared.module');
+    addModuleImportToModule(_host, modulePath, 'AppRoutingModule', './app-routing.module');
     // add loading to index.html
     if (!buildOptions.index) {
       throw new SchematicsException('No project "index.html" file could be found.');
@@ -87,6 +88,13 @@ const addSharedModulesToModule = (_options: Schema): Rule => {
     const mainTsContent = _host.read(mainTsFile)!.toString();
     if (!mainTsContent.match(`import 'hammerjs';`)) {
       _host.overwrite(mainTsFile, `import 'hammerjs';\n` + mainTsContent);
+    }
+
+    // add navigation template to app.component.html
+    const appComponentHtmlFile = modulePath.replace('module.ts', 'component.html');
+    const appComponentHtmlContent = _host.read(appComponentHtmlFile)!.toString();
+    if (!appComponentHtmlContent.match(`router-outlet`)) {
+      _host.overwrite(appComponentHtmlFile, getAppComponentContent(appComponentHtmlContent, _options.placeholder));
     }
     return _host;
   };

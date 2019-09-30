@@ -10,6 +10,12 @@
       "$default": {
         "$source": "projectName"
       }
+    },
+    "placeholder": {
+      "type": "boolean",
+      "default": false,
+      "description": "preserve angular placeholder or not.",
+      "$x-prompt": "Would you like to preserve angular placeholder (app.component.html)?"
     }
   },
   "required": []

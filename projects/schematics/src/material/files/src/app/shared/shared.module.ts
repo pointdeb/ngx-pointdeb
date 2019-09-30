@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { MaterialModule } from '../material/material.module';
+import { NotFoundComponent } from './pages/not-found/not-found.component';
 
 const modules = [
   MaterialModule,
@@ -13,12 +14,13 @@ const modules = [
 ];
 
 @NgModule({
-  declarations: [],
+  declarations: [NotFoundComponent],
   imports: [
     CommonModule,
     ...modules
   ],
   exports: [
+    NotFoundComponent,
     ...modules
   ]
 })
