@@ -1,14 +1,19 @@
 {
   "name": "@pointdeb/schematics",
-  "version": "0.0.1",
-  "description": "A blank schematics",
+  "version": "0.0.2",
+  "description": "Schematics to automate common use cases in Angular project",
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "build:watch": "tsc -p tsconfig.json --watch",
     "test": "npm run build && jasmine src/**/*_spec.js"
   },
   "keywords": [
-    "schematics"
+    "schematics",
+    "angular",
+    "material",
+    "theme",
+    "pointdeb",
+    "boilerplate"
   ],
   "author": "",
   "license": "MIT",
