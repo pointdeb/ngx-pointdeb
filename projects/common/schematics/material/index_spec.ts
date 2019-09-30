@@ -1,7 +1,7 @@
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
 
-const collectionPath = path.join(__dirname, '../collection.json');
+const collectionPath = path.join(__dirname, '../../collection.json');
 const runner = new SchematicTestRunner('schematics', collectionPath);
 let appTree: UnitTestTree;
 const appOptions = { name: 'application', style: 'scss' };

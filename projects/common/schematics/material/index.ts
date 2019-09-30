@@ -19,7 +19,7 @@ import {
   getProjectTargetOptions,
   getProjectMainFile
 } from '@angular/cdk/schematics';
-import { PackageJsonDependencyTypes, PackageJsonDependency, addPackageJsonDependency } from '../../utils';
+import { PackageJsonDependencyTypes, PackageJsonDependency, addPackageJsonDependency } from '../utils';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 import { getWorkspace } from '@schematics/angular/utility/config';
 import { InsertChange } from '@schematics/angular/utility/change';

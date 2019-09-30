@@ -14,7 +14,8 @@
     "noImplicitThis": true,
     "noUnusedParameters": true,
     "noUnusedLocals": true,
-    "rootDirs": ["src/", "utils/"],
+    "rootDir": "schematics/",
+    "outDir": "../../dist/common/schematics",
     "skipDefaultLibCheck": true,
     "skipLibCheck": true,
     "sourceMap": true,
@@ -26,9 +27,9 @@
     ]
   },
   "include": [
-    "src/**/*"
+    "schematics/**/*"
   ],
   "exclude": [
-    "src/*/files/**/*"
+    "schematics/*/files/**/*"
   ]
 }

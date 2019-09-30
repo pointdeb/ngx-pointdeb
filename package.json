@@ -7,11 +7,15 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "build:schematics": "tsc -p projects/common/tsconfig.schematics.json",
+    "tests:schematics": "npm run build:schematics && jasmine projects/**/schematics/**/*_spec.js"
   },
   "private": true,
   "dependencies": {
+    "@angular-devkit/core": "^8.3.6",
     "@angular/animations": "~8.2.7",
+    "@angular/cdk": "^8.2.1",
     "@angular/common": "~8.2.7",
     "@angular/compiler": "~8.2.7",
     "@angular/core": "~8.2.7",
@@ -26,14 +30,15 @@
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.803.5",
     "@angular-devkit/build-ng-packagr": "~0.803.5",
-    "@angular-devkit/schematics": "^8.3.5",
+    "@angular-devkit/schematics": "^8.3.6",
     "@angular/cli": "~8.3.5",
     "@angular/compiler-cli": "~8.2.7",
     "@angular/language-service": "~8.2.7",
-    "@types/jasmine": "~3.3.8",
+    "@types/jasmine": "^3.3.16",
     "@types/jasminewd2": "~2.0.3",
-    "@types/node": "~8.9.4",
+    "@types/node": "^8.9.5",
     "codelyzer": "^5.0.0",
+    "jasmine": "^3.5.0",
     "jasmine-core": "~3.4.0",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "~4.1.0",
@@ -46,6 +51,6 @@
     "ts-node": "~7.0.0",
     "tsickle": "^0.37.0",
     "tslint": "~5.15.0",
-    "typescript": "~3.5.3"
+    "typescript": "^3.5.3"
   }
 }
