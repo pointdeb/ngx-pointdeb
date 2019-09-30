@@ -1,0 +1,10 @@
+{
+  "$schema": "../node_modules/@angular-devkit/schematics/collection-schema.json",
+  "schematics": {
+    "material": {
+      "description": "Init Material project schematic.",
+      "factory": "./material/index#material",
+      "schema": "./material/schema.json"
+    }
+  }
+}

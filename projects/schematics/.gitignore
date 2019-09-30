@@ -1,7 +1,15 @@
 # Outputs
-schematics/**/*.js
-schematics/**/*.js.map
-schematics/**/*.d.ts
+src/**/*.js
+src/**/*.js.map
+src/**/*.d.ts
+
+utils/**/*.js
+utils/**/*.js.map
+utils/**/*.d.ts
+
+utils/*.js
+utils/*.js.map
+utils/*.d.ts
 
 # IDEs
 .idea/
