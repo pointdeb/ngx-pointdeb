@@ -9,7 +9,8 @@ import {
   template,
   forEach,
   FileEntry,
-  SchematicsException
+  SchematicsException,
+  move
 } from '@angular-devkit/schematics';
 import {
   findModuleFromOptions,
@@ -47,17 +48,20 @@ const installPackageJsonDependencies = (): Rule => {
   };
 };
 
-const applyTemplateFiles = (options: Schema): Rule => {
+const applyTemplateFiles = (_options: Schema): Rule => {
   return (_host: Tree, _context: SchematicContext) => {
+    const workspace = getWorkspace(_host);
+    const project = getProjectFromWorkspace(workspace, _options.project);
     const rule = mergeWith(
       apply(url('./files'), [
-        template({ ...options }),
+        template({ ..._options, name: _options.project }),
         forEach((fileEntry: FileEntry) => {
           if (_host.exists(fileEntry.path)) {
             return null;
           }
           return fileEntry;
-        })
+        }),
+        move(project.root)
       ])
     );
     return rule(_host, _context);
@@ -123,11 +127,17 @@ const insertStyles = (_options: Schema): Rule => {
 };
 
 export function material(_options: Schema): Rule {
-  return chain([
-    addPackageJsonDendencies(),
-    installPackageJsonDependencies(),
-    applyTemplateFiles(_options),
-    addSharedModulesToModule(_options),
-    insertStyles(_options)
-  ]);
+  return (_host: Tree, _context: SchematicContext) => {
+    if (!_options.project) {
+      const workspace = getWorkspace(_host);
+      _options.project = workspace.defaultProject!;
+    }
+    return chain([
+      addPackageJsonDendencies(),
+      installPackageJsonDependencies(),
+      applyTemplateFiles(_options),
+      addSharedModulesToModule(_options),
+      insertStyles(_options)
+    ]);
+  };
 }
