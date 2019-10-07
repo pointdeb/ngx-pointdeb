@@ -25,6 +25,8 @@ describe('material', () => {
           `/${appOptions.name}/src/app/shared/models/base-model.ts`,
           `/${appOptions.name}/src/app/shared/shared.module.ts`,
           `/${appOptions.name}/src/app/shared/pages/not-found/not-found.component.ts`,
+          `/${appOptions.name}/src/app/shared/pages/icons/icons.component.ts`,
+          `/${appOptions.name}/src/app/shared/services/notification.service.ts`,
           `/${appOptions.name}/src/styles.scss`,
           `/${appOptions.name}/src/app/app-routing.module.ts`,
         ];

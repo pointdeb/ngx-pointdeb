@@ -1,0 +1,13 @@
+<mat-form-field>
+  <input type="text" matInput placeholder="Search..." (keyup)="term.next($event.target.value)">
+</mat-form-field>
+<div class="icons">
+  <button *ngFor="let icon of filteredIcons | async" mat-mini-fab mat-icon-button [matTooltip]="icon"
+    color="secondary" (click)="toClipBoard(icon)">
+    <mat-icon>{{icon}}</mat-icon>
+  </button>
+</div>
+
+<mat-form-field [ngStyle]="{'opacity': 0, 'height': 0, 'display': 'block'}">
+  <input type="text" matInput #selected>
+</mat-form-field>
