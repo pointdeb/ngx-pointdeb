@@ -20,6 +20,7 @@ describe('material', () => {
         let expectedFiles = [
           `/package.json`,
           `/proxy-config.js`,
+          `/.htaccess`,
           `/${appOptions.name}/src/app/app.module.ts`,
           `/${appOptions.name}/src/app/material/material.module.ts`,
           `/${appOptions.name}/src/app/shared/models/base-model.ts`,

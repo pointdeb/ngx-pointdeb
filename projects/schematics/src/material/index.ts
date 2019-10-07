@@ -33,6 +33,7 @@ import { InsertChange } from '@schematics/angular/utility/change';
 import { createStylesContent, getLoaderComponent, getAppComponentContent } from './contents/theming';
 import { Schema } from './schema';
 import { getProxyConfig } from './contents/proxy-config';
+import { getHtaccess } from './contents/htaccess';
 
 const addPackageJsonDendencies = (): Rule => {
   return (_host: Tree, _context: SchematicContext) => {
@@ -118,6 +119,12 @@ const addSharedModulesToModule = (_options: Schema): Rule => {
     const proxyConfigFile = 'proxy-config.js';
     if (!_host.exists(proxyConfigFile)) {
       _host.create(proxyConfigFile, getProxyConfig());
+    }
+
+    // add .htaccess file
+    const htaccessFile = '.htaccess';
+    if (!_host.exists(htaccessFile)) {
+      _host.create(htaccessFile, getHtaccess());
     }
     return _host;
   };
