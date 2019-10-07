@@ -10,6 +10,11 @@ export interface PackageJsonDependency {
   name: string;
 }
 
+export interface PackageJsonScript {
+  key: string;
+  script: string;
+}
+
 /**
  * Sorts the keys of the given object.
  * @returns A new object instance with sorted keys
@@ -33,5 +38,23 @@ export const addPackageJsonDependency = (_host: Tree, _context: SchematicContext
     _host.overwrite(packageJsonName, JSON.stringify(packageJsonObj, null, 2));
   }
   _context.logger.log('info', `Added "${_dependency.name} into ${_dependency.type}"`);
+  return _host;
+};
+
+export const addPackageJsonScript = (_host: Tree, _context: SchematicContext, _script: PackageJsonScript): Tree => {
+  const packageJsonName = 'package.json';
+  if (_host.exists(packageJsonName)) {
+    const packageJsonContent = _host.read(packageJsonName)!.toString('utf-8');
+    const packageJsonObj = JSON.parse(packageJsonContent);
+    if (!packageJsonObj.scripts) {
+      packageJsonObj.scripts = {};
+    }
+    if (!packageJsonObj.scripts[_script.key]) {
+      packageJsonObj.scripts[_script.key] = _script.script;
+      packageJsonObj.scripts = sortObjectByKeys(packageJsonObj.scripts);
+    }
+    _host.overwrite(packageJsonName, JSON.stringify(packageJsonObj, null, 2));
+  }
+  _context.logger.log('info', `Added "${_script.key} scripts"`);
   return _host;
 };

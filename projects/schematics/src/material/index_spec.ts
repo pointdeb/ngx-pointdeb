@@ -18,17 +18,18 @@ describe('material', () => {
       .toPromise()
       .then(resultTree => {
         let expectedFiles = [
-          '/package.json',
-          '/src/app/app.module.ts',
-          '/src/app/material/material.module.ts',
-          '/src/app/shared/models/base-model.ts',
-          '/src/app/shared/shared.module.ts',
-          '/src/app/shared/pages/not-found/not-found.component.ts',
-          '/src/styles.scss',
-          '/src/app/app-routing.module.ts',
+          `/package.json`,
+          `/proxy-config.js`,
+          `/${appOptions.name}/src/app/app.module.ts`,
+          `/${appOptions.name}/src/app/material/material.module.ts`,
+          `/${appOptions.name}/src/app/shared/models/base-model.ts`,
+          `/${appOptions.name}/src/app/shared/shared.module.ts`,
+          `/${appOptions.name}/src/app/shared/pages/not-found/not-found.component.ts`,
+          `/${appOptions.name}/src/styles.scss`,
+          `/${appOptions.name}/src/app/app-routing.module.ts`,
         ];
         expectedFiles = expectedFiles.sort().map(item => {
-          expect(resultTree.files.includes(appOptions.name + item));
+          expect(resultTree.files.includes(item)).toBeTruthy(item);
           return item;
         });
         expect(resultTree.readContent('/package.json')).toContain(`"@angular/material"`);

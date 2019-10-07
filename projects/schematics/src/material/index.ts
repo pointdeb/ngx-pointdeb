@@ -20,12 +20,19 @@ import {
   getProjectTargetOptions,
   getProjectMainFile
 } from '@angular/cdk/schematics';
-import { PackageJsonDependencyTypes, PackageJsonDependency, addPackageJsonDependency } from '../../utils';
+import {
+  PackageJsonDependencyTypes,
+  PackageJsonDependency,
+  addPackageJsonDependency,
+  PackageJsonScript,
+  addPackageJsonScript
+} from '../../utils';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 import { getWorkspace } from '@schematics/angular/utility/config';
 import { InsertChange } from '@schematics/angular/utility/change';
-import { createStylesContent, getLoaderComponent, getAppComponentContent } from './theming/theming';
+import { createStylesContent, getLoaderComponent, getAppComponentContent } from './contents/theming';
 import { Schema } from './schema';
+import { getProxyConfig } from './contents/proxy-config';
 
 const addPackageJsonDendencies = (): Rule => {
   return (_host: Tree, _context: SchematicContext) => {
@@ -36,7 +43,13 @@ const addPackageJsonDendencies = (): Rule => {
       { type: PackageJsonDependencyTypes.DEFAULT, version: '~3.0.1', name: 'material-design-icons' }
     ];
 
+    const scripts: PackageJsonScript[] = [
+      { key: 'start', script: `ng serve --proxy-config=proxy-config.js` },
+      { key: 'build', script: `ng build --aot --prod --output-hashing=none` },
+    ];
+
     dependencies.forEach(dependency => addPackageJsonDependency(_host, _context, dependency));
+    scripts.forEach(script => addPackageJsonScript(_host, _context, script));
     return _host;
   };
 };
@@ -56,7 +69,7 @@ const applyTemplateFiles = (_options: Schema): Rule => {
       apply(url('./files'), [
         template({ ..._options, name: _options.project }),
         forEach((fileEntry: FileEntry) => {
-          if (_host.exists(fileEntry.path)) {
+          if (_host.exists(project.root + fileEntry.path)) {
             return null;
           }
           return fileEntry;
@@ -99,6 +112,12 @@ const addSharedModulesToModule = (_options: Schema): Rule => {
     const appComponentHtmlContent = _host.read(appComponentHtmlFile)!.toString();
     if (!appComponentHtmlContent.match(`router-outlet`)) {
       _host.overwrite(appComponentHtmlFile, getAppComponentContent(appComponentHtmlContent, _options.placeholder));
+    }
+
+    // add proxy-config file
+    const proxyConfigFile = 'proxy-config.js';
+    if (!_host.exists(proxyConfigFile)) {
+      _host.create(proxyConfigFile, getProxyConfig());
     }
     return _host;
   };

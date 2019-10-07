@@ -55,7 +55,21 @@ body {
 };
 
 export const getLoaderComponent = () => {
-  return `<div class="loader">Loading...</div>`;
+  return `
+<style>
+.loader {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  background: white;
+  position: absolute;
+  align-items: center;
+  justify-content: center;
+  top: 0;
+}
+</style>
+<div class="loader">Loading...</div>
+`;
 };
 
 export const getAppComponentContent = (old_content: string = '', preservePlaceholder: boolean = false) => {
